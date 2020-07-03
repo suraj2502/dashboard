@@ -1,12 +1,12 @@
 import React from "react";
 import './login.css'
-import { Formik } from "formik";
+import { Formik} from "formik";
 import * as EmailValidator from "email-validator";
 import { Link } from "react-router-dom";
 
-import './Join.css';
 
-const ValidatedLoginForm = () => (
+const Login = () => (
+  
   <Formik
     initialValues={{ email: "", password: "" }}
     onSubmit={(values, { setSubmitting }) => {
@@ -18,21 +18,31 @@ const ValidatedLoginForm = () => (
     }}
     validate={values => {
       let errors = {};
+      
       if (!values.email) {
         errors.email = "Required";
       } else if (!EmailValidator.validate(values.email)) {
         errors.email = "Invalid email address.";
       }
-    
-      const passwordRegex = /(?=.*[0-9])/;
       if (!values.password) {
         errors.password = "Required";
       } else if (values.password.length < 8) {
         errors.password = "Password must be 8 characters long.";
-      } else if (!passwordRegex.test(values.password)) {
+      } else if (!/(?=.*[0-9])/.test(values.password)) {
         errors.password = "Invalid password. Must contain one number.";
       }
-    
+      else if(!/(?=.*[A-Z])/.test(values.password))
+      {
+        errors.password ="Invalid password.must contain at least one uppercase character"
+      }
+      else if(!/([a-z])/.test(values.password))
+    {
+      errors.password ="Invalid password.must contain at least one lowercase character"
+    }
+    else if(!/(?=.*\W)/.test(values.password))
+    {
+      errors.password ="Invalid password.must contain at least one special character"
+    }
       return errors;
     }}
   >
@@ -47,14 +57,13 @@ const ValidatedLoginForm = () => (
         handleBlur,
         handleSubmit
       } = props;
-
+   
       return (
         <div className="joinOuterContainer">
         <div className="joinInnerContainer">
           <h1 className="heading">Login</h1>
-          <form onSubmit={handleSubmit}>
+          
 
-<label htmlFor="email">Email</label>
 <input
   id="email"
   type="text"
@@ -62,14 +71,12 @@ const ValidatedLoginForm = () => (
   value={values.email}
   onChange={handleChange}
   onBlur={handleBlur}
-  className={"text"}
-  className={errors.email && touched.email && "error"}
+  className={errors.email && touched.email && "error" && "joinInput"}
 />
 {errors.email && touched.email && (
   <div className="input-feedback">{errors.email}</div>
 )}
 
-<label htmlFor="password">Password</label>
 <input
   id="password"
   type="password"
@@ -77,19 +84,16 @@ const ValidatedLoginForm = () => (
   value={values.password}
   onChange={handleChange}
   onBlur={handleBlur}
-  className={errors.password && touched.password && "error"}
+  className={errors.password && touched.password && "error" && "joinInput mt-20"}
 />
 {errors.password && touched.password && (
   <div className="input-feedback">{errors.password}</div>
 )}
 
-
-  <Link  to={`/Dashboard#/users`}>
-  <button className={'button mt-20'} type="submit" disabled={isSubmitting}>Sign In</button>
+  <Link onClick={e => ((errors.email || errors.password )) ? e.preventDefault() : null} to={`/Dashboard#/users`}>
+  <button className={'button mt-20' } type="submit" onSubmit={handleSubmit} disabled={isSubmitting}>Sign In</button>
 </Link>
 
-
-</form>
           
         </div>
       </div>
@@ -101,4 +105,4 @@ const ValidatedLoginForm = () => (
   
 );
 
-export default ValidatedLoginForm;
+export default Login;

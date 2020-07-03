@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {BrowserRouter as Router,Route} from 'react-router-dom'
-import Join from './Components/Join/Join';
+import Join from './Components/Join/Login';
 
 import Dashboard from './Components/Dashboard/Dashboard';
 
